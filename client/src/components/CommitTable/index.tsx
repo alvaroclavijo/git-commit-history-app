@@ -10,6 +10,10 @@ const CommitTable: React.FC<CommitTableProps> = ({ data }) => {
   const columns = React.useMemo(
     () => [
       {
+        Header: "Author",
+        accessor: "commit.author.name"
+      },
+      {
         Header: "Commit",
         accessor: "sha",
       },
@@ -17,6 +21,10 @@ const CommitTable: React.FC<CommitTableProps> = ({ data }) => {
         Header: "Message",
         accessor: "commit.message",
       },
+      {
+        Header: "Date",
+        accessor: "commit.author.date"
+      }
     ],
     []
   );
