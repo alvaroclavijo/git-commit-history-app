@@ -1,0 +1,35 @@
+.container {
+  overflow-x: auto;
+}
+
+.table {
+  font-size: clamp(12px, 3vw, 19px);
+  font-family: 'Roboto';
+}
+
+.header {
+  font-size: clamp(12px, 3vw, 22px);
+  text-align: left;
+  color: gray;
+  border-bottom: 2px solid lightgray;
+  font-weight: 700;
+}
+
+.row {
+  transition: 0.2s ease-in-out;
+}
+
+.row:hover {
+  background-color: rgb(235, 235, 235);
+}
+
+.field {
+  padding: 15px 15px 15px 0px;
+}
+
+.single-line {
+  width: clamp(50px, 15vw, 200px);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
