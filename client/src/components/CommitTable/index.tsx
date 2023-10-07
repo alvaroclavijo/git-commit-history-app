@@ -2,6 +2,7 @@ import React from "react";
 import { useTable, HeaderGroup, Cell, Row, Column } from "react-table";
 import { Commit } from "../../types/common/Commit";
 import classes from "./styles.module.css";
+import RoundedContainer from "../UI/RoundedContainer";
 
 interface CommitTableProps {
   data: Commit[];
@@ -69,7 +70,7 @@ const CommitTable: React.FC<CommitTableProps> = ({ data }) => {
     });
 
   return (
-    <div className={classes.container}>
+    <RoundedContainer>
       <table {...getTableProps()} className={classes.table}>
         <thead className={classes.header}>
           {headerGroups.map((headerGroup: HeaderGroup<Commit>) => (
@@ -97,7 +98,7 @@ const CommitTable: React.FC<CommitTableProps> = ({ data }) => {
           })}
         </tbody>
       </table>
-    </div>
+    </RoundedContainer>
   );
 };
 
