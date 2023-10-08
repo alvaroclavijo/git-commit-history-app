@@ -59,19 +59,29 @@ const CommitTable: React.FC = () => {
     []
   );
 
-  React.useEffect(() => {
-    fetchCommits();
-  }, []);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [totalPages, setTotalPages] = React.useState(0);
+  
+  const pageSize = 10
 
-  const fetchCommits = async () => {
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
+
+  React.useEffect(() => {
+    fetchCommits(currentPage, pageSize);
+  }, [currentPage]);
+
+  const fetchCommits = async (currentPage: number, pageSize: number) => {
     const { VITE_API_URL } = import.meta.env;
     try {
       const resp = await fetch(
-        `${VITE_API_URL}/commits?owner=alvaroclavijo&repo=git-commit-history-app&token=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`
+        `${VITE_API_URL}/commits?owner=alvaroclavijo&repo=git-commit-history-app&token=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&limit=${pageSize}&page=${currentPage}`
       );
       const resJson = await resp.json();
-      console.log(resJson);
-      setCommits(resJson);
+      setTotalPages(resJson.totalPages);
+      setCurrentPage(resJson.page);
+      setCommits(resJson.content);
     } catch (error) {
       console.log(error);
     }
@@ -79,7 +89,13 @@ const CommitTable: React.FC = () => {
 
   return (
     <RoundedContainer>
-      <Table data={commits} columns={columns} />
+      <Table
+        data={commits}
+        columns={columns}
+        page={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </RoundedContainer>
   );
 };
