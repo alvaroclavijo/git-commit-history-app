@@ -1,32 +1,32 @@
 import React from "react";
 import CommitTable from "../../components/CommitTable";
-
 import classes from "./styles.module.css";
 import FixedWidthContainer from "../../components/UI/FixedWithContainer";
 
 const CommitsPage: React.FC = () => {
-  const data = [
-    {
-      sha: "123456",
-      commit: {
-        message: "First commit",
-        author: { name: "Alvaro Clavijo", date: "2023-10-07T13:29:34Z" },
-      },
-    },
-    {
-      sha: "789012",
-      commit: {
-        message: "Second commit",
-        author: { name: "Alvaro Clavijo", date: "2023-10-07T13:29:34Z" },
-      },
-    },
-    // Add more data objects as needed
-  ];
+  const [commits, setCommits] = React.useState([]);
+
+  React.useEffect(() => {
+    fetchCommits();
+  }, []);
+
+  const fetchCommits = async () => {
+    const { VITE_API_URL } = import.meta.env;
+    try {
+      const resp = await fetch(
+        `${VITE_API_URL}/commits?owner=alvaroclavijo&repo=git-commit-history-app&token=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`
+      );
+      const resJson = await resp.json();
+      setCommits(resJson);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <FixedWidthContainer>
       <h1 className={classes.title}>Commits</h1>
-      <CommitTable data={data} />
+      <CommitTable data={commits} />
     </FixedWidthContainer>
   );
 };
