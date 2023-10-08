@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  useTable,
-  HeaderGroup,
-  Cell,
-  Row,
-  Column,
-} from "react-table";
+import { useTable, HeaderGroup, Cell, Row, Column } from "react-table";
 import { Commit } from "../../types/common/Commit";
 import classes from "./styles.module.css";
 
@@ -15,6 +9,7 @@ interface TableProps {
   page: number;
   totalPages: number;
   onPageChange: (newPage: number) => void;
+  className?: {};
 }
 
 const Table: React.FC<TableProps> = ({
@@ -23,6 +18,7 @@ const Table: React.FC<TableProps> = ({
   page,
   totalPages,
   onPageChange,
+  className,
 }) => {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({
@@ -32,7 +28,7 @@ const Table: React.FC<TableProps> = ({
 
   return (
     <>
-      <table {...getTableProps()} className={classes.table}>
+      <table {...getTableProps()} className={`${classes.table} ${className}`}>
         <thead className={classes.header}>
           {headerGroups.map((headerGroup: HeaderGroup<Commit>) => (
             <tr {...headerGroup.getHeaderGroupProps()}>

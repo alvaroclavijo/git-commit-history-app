@@ -2,9 +2,11 @@ import React from "react";
 import classes from "./styles.module.css";
 import RoundedContainer from "../UI/RoundedContainer";
 import Table from "../UI/Table";
+import Loader from "../UI/Loader";
 
 const CommitTable: React.FC = () => {
   const [commits, setCommits] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(false);
   const columns = React.useMemo(
     () => [
       {
@@ -79,6 +81,7 @@ const CommitTable: React.FC = () => {
   const fetchCommits = async (currentPage: number, pageSize: number) => {
     const { VITE_API_URL } = import.meta.env;
     try {
+      setIsLoading(true);
       const resp = await fetch(
         `${VITE_API_URL}/commits?&limit=${pageSize}&page=${currentPage}`
       );
@@ -88,8 +91,18 @@ const CommitTable: React.FC = () => {
       setCommits(resJson.content);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <RoundedContainer className={classes.container}>
+        <Loader />
+      </RoundedContainer>
+    );
+  }
 
   return (
     <RoundedContainer>
@@ -99,6 +112,7 @@ const CommitTable: React.FC = () => {
         page={currentPage}
         totalPages={totalPages}
         onPageChange={handlePageChange}
+        className={classes.table}
       />
     </RoundedContainer>
   );
