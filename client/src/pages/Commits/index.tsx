@@ -14,7 +14,7 @@ const CommitsPage: React.FC = () => {
     const { VITE_API_URL } = import.meta.env;
     try {
       const resp = await fetch(
-        `${VITE_API_URL}/commits?owner=alvaroclavijo&repo=git-commit-history-app&token=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`
+        `${VITE_API_URL}/commits?owner=alvaroclavijo&repo=git-commit-history-app&token=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`
       );
       const resJson = await resp.json();
       setCommits(resJson);
