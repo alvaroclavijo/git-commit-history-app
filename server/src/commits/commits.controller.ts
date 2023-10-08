@@ -7,11 +7,19 @@ export class CommitsController {
 
   @Get()
   async getCommits(
-    @Query('owner') owner: string,
-    @Query('repo') repo: string,
-    @Query('token') token: string,
+    @Query('owner') owner: string = '',
+    @Query('repo') repo: string = '',
+    @Query('token') token: string = '',
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
   ) {
-    // Call the service to fetch commits from GitHub API
-    return this.commitsService.getGitHubCommits(owner, repo, token);
+    const normalizedPage = Math.max(1, page); // Ensure that page is at least 1
+    return this.commitsService.getGitHubCommits(
+      owner,
+      repo,
+      token,
+      normalizedPage,
+      limit,
+    );
   }
 }
