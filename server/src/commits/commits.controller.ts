@@ -7,17 +7,16 @@ export class CommitsController {
 
   @Get()
   async getCommits(
-    @Query('owner') owner: string = '',
-    @Query('repo') repo: string = '',
-    @Query('token') token: string = '',
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
   ) {
+    const { GITHUB_OWNER, GITHUB_REPO, GITHUB_TOKEN } = process.env;
+
     const normalizedPage = Math.max(1, page); // Ensure that page is at least 1
     return this.commitsService.getGitHubCommits(
-      owner,
-      repo,
-      token,
+      GITHUB_OWNER,
+      GITHUB_REPO,
+      GITHUB_TOKEN,
       normalizedPage,
       limit,
     );
