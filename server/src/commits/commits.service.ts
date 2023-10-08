@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { Observable, firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom, map, of } from 'rxjs';
 import { AxiosResponse } from 'axios';
 
 @Injectable()
@@ -11,8 +11,22 @@ export class CommitsService {
     owner: string,
     repo: string,
     token: string,
-  ): Promise<Observable<AxiosResponse>> {
+    page: number,
+    limit: number,
+  ): Promise<
+    Observable<{
+      content: any[];
+      page: number;
+      size: number;
+      totalPages: number;
+    }>
+  > {
     const url = `https://api.github.com/repos/${owner}/${repo}/commits`;
+    const queryParams = {
+      page: page.toString(),
+      per_page: limit.toString(),
+    };
+
     const headers = {
       Accept: 'application/vnd.github+json',
       Authorization: `Bearer ${token}`,
@@ -21,13 +35,28 @@ export class CommitsService {
 
     const axiosConfig = {
       headers,
+      params: queryParams,
     };
 
     try {
       const response = await firstValueFrom(
         this.httpService.get(url, axiosConfig),
       );
-      return response.data;
+
+      const linkHeader = response.headers.link;
+      const lastPageMatch = linkHeader
+        ? linkHeader.match(/page=(\d+)&per_page=\d+>; rel="last"/)
+        : null;
+      const totalPages = lastPageMatch ? parseInt(lastPageMatch[1]) : 1;
+
+      const customResponse = {
+        content: response.data,
+        page,
+        size: limit,
+        totalPages,
+      };
+
+      return of(customResponse).pipe(map((data) => data));
     } catch (error) {
       const errorMessage =
         error.response?.data?.message || 'Failed to fetch GitHub commits.';
