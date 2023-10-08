@@ -1,14 +1,10 @@
 import React from "react";
-import { useTable, HeaderGroup, Cell, Row, Column } from "react-table";
-import { Commit } from "../../types/common/Commit";
 import classes from "./styles.module.css";
 import RoundedContainer from "../UI/RoundedContainer";
+import Table from "../UI/Table";
 
-interface CommitTableProps {
-  data: Commit[];
-}
-
-const CommitTable: React.FC<CommitTableProps> = ({ data }) => {
+const CommitTable: React.FC = () => {
+  const [commits, setCommits] = React.useState([]);
   const columns = React.useMemo(
     () => [
       {
@@ -63,41 +59,27 @@ const CommitTable: React.FC<CommitTableProps> = ({ data }) => {
     []
   );
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({
-      columns,
-      data,
-    });
+  React.useEffect(() => {
+    fetchCommits();
+  }, []);
+
+  const fetchCommits = async () => {
+    const { VITE_API_URL } = import.meta.env;
+    try {
+      const resp = await fetch(
+        `${VITE_API_URL}/commits?owner=alvaroclavijo&repo=git-commit-history-app&token=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`
+      );
+      const resJson = await resp.json();
+      console.log(resJson);
+      setCommits(resJson);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <RoundedContainer>
-      <table {...getTableProps()} className={classes.table}>
-        <thead className={classes.header}>
-          {headerGroups.map((headerGroup: HeaderGroup<Commit>) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column: Column<Commit>) => (
-                <th {...column.getHeaderProps()}>{column.render("Header")}</th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()} className={classes.body}>
-          {rows.map((row: Row<Commit>) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()} className={classes.row}>
-                {row.cells.map((cell: Cell<Commit>) => {
-                  return (
-                    <td {...cell.getCellProps()} className={classes.field}>
-                      {cell.render("Cell")}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <Table data={commits} columns={columns} />
     </RoundedContainer>
   );
 };

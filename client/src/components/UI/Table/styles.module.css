@@ -1,0 +1,25 @@
+.table {
+  font-size: clamp(12px, 3vw, 19px);
+  font-family: 'Roboto';
+  width: 100%;
+}
+
+.header {
+  font-size: clamp(12px, 3vw, 22px);
+  text-align: left;
+  color: gray;
+  border-bottom: 2px solid lightgray;
+  font-weight: 700;
+}
+
+.row {
+  transition: 0.2s ease-in-out;
+}
+
+.row:hover {
+  background-color: rgba(235, 235, 235, 0.639);
+}
+
+.field {
+  padding: 15px 15px 15px 0px;
+}
