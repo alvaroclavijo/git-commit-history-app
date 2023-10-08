@@ -26,11 +26,7 @@ const CommitTable: React.FC = () => {
           const firstDigitsSha = value.substring(0, 5);
 
           return (
-            <a
-              href={row.original.html_url}
-              className={classes["single-line"]}
-              style={{ width: "clamp(100px, 20vw, 200px" }}
-            >
+            <a href={row.original.html_url} className={classes["single-line"]}>
               {firstDigitsSha}
             </a>
           );
@@ -51,14 +47,17 @@ const CommitTable: React.FC = () => {
       {
         Header: "Date",
         accessor: "commit.author.date",
-        Cell: ({ value }) => (
-          <p
-            className={classes["single-line"]}
-            style={{ width: "clamp(100px, 20vw, 200px" }}
-          >
-            {value}
-          </p>
-        ),
+        Cell: ({ value }) => {
+          const dateObject = new Date(value);
+          const formattedDate = `${
+            dateObject.getMonth() + 1
+          }/${dateObject.getDate()}/${dateObject.getFullYear()}`;
+          return (
+            <p className={classes["single-line"]} style={{ width: "100px" }}>
+              {formattedDate}
+            </p>
+          );
+        },
       },
     ],
     []
