@@ -1,7 +1,6 @@
 import React from "react";
 import {
   useTable,
-  usePagination,
   HeaderGroup,
   Cell,
   Row,
@@ -13,32 +12,23 @@ import classes from "./styles.module.css";
 interface TableProps {
   data: any[];
   columns: any[];
+  page: number;
+  totalPages: number;
+  onPageChange: (newPage: number) => void;
 }
 
-const Table: React.FC<TableProps> = ({ data, columns }) => {
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    page,
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
-    pageCount,
-    gotoPage,
-    nextPage,
-    previousPage,
-    setPageSize,
-    state: { pageIndex, pageSize },
-  } = useTable(
-    {
+const Table: React.FC<TableProps> = ({
+  data,
+  columns,
+  page,
+  totalPages,
+  onPageChange,
+}) => {
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+    useTable({
       columns,
       data,
-    },
-    usePagination
-  );
+    });
 
   return (
     <>
@@ -69,37 +59,19 @@ const Table: React.FC<TableProps> = ({ data, columns }) => {
           })}
         </tbody>
       </table>
-      <div className={classes["pagination-container"]}>
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {"<<"}
-        </button>{" "}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+      <div className={classes["pagination-section"]}>
+        <button onClick={() => onPageChange(page - 1)} disabled={page === 1}>
           {"<"}
-        </button>{" "}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {">"}
-        </button>{" "}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {">>"}
-        </button>{" "}
-        <span>
-          Page{" "}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{" "}
-        </span>
-        <select
-          value={pageSize}
-          onChange={(e) => {
-            setPageSize(Number(e.target.value));
-          }}
+        </button>
+        <p>
+          {page} of {totalPages}
+        </p>
+        <button
+          onClick={() => onPageChange(page + 1)}
+          disabled={page === totalPages}
         >
-          {[10, 15, 20].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
+          {">"}
+        </button>
       </div>
     </>
   );
