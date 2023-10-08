@@ -22,14 +22,19 @@ const CommitTable: React.FC = () => {
       {
         Header: "Commit",
         accessor: "sha",
-        Cell: ({ value }) => (
-          <p
-            className={classes["single-line"]}
-            style={{ width: "clamp(100px, 20vw, 200px" }}
-          >
-            {value}
-          </p>
-        ),
+        Cell: ({ value, row }) => {
+          const firstDigitsSha = value.substring(0, 5);
+
+          return (
+            <a
+              href={row.original.html_url}
+              className={classes["single-line"]}
+              style={{ width: "clamp(100px, 20vw, 200px" }}
+            >
+              {firstDigitsSha}
+            </a>
+          );
+        },
       },
       {
         Header: "Message",
@@ -61,8 +66,8 @@ const CommitTable: React.FC = () => {
 
   const [currentPage, setCurrentPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(0);
-  
-  const pageSize = 10
+
+  const pageSize = 10;
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
@@ -76,7 +81,7 @@ const CommitTable: React.FC = () => {
     const { VITE_API_URL } = import.meta.env;
     try {
       const resp = await fetch(
-        `${VITE_API_URL}/commits?owner=alvaroclavijo&repo=git-commit-history-app&token=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&limit=${pageSize}&page=${currentPage}`
+        `${VITE_API_URL}/commits?&limit=${pageSize}&page=${currentPage}`
       );
       const resJson = await resp.json();
       setTotalPages(resJson.totalPages);
