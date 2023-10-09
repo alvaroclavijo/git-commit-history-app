@@ -1,6 +1,5 @@
 import React from "react";
-import { useTable, HeaderGroup, Cell, Row, Column } from "react-table";
-import { Commit } from "../../types/common/Commit";
+import { useTable } from "react-table";
 import classes from "./styles.module.css";
 
 interface TableProps {
@@ -30,20 +29,20 @@ const Table: React.FC<TableProps> = ({
     <>
       <table {...getTableProps()} className={`${classes.table} ${className}`}>
         <thead className={classes.header}>
-          {headerGroups.map((headerGroup: HeaderGroup<Commit>) => (
+          {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column: Column<Commit>) => (
+              {headerGroup.headers.map((column) => (
                 <th {...column.getHeaderProps()}>{column.render("Header")}</th>
               ))}
             </tr>
           ))}
         </thead>
         <tbody {...getTableBodyProps()} className={classes.body}>
-          {rows.map((row: Row<Commit>) => {
+          {rows.map((row) => {
             prepareRow(row);
             return (
               <tr {...row.getRowProps()} className={classes.row}>
-                {row.cells.map((cell: Cell<Commit>) => {
+                {row.cells.map((cell) => {
                   return (
                     <td {...cell.getCellProps()} className={classes.field}>
                       {cell.render("Cell")}
